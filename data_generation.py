@@ -31,69 +31,61 @@ def std_randomization(env, t=188):
 def start_generation(gs, c, tp):
     start = datetime.now()
     if tp == 'both':
-        work_list = [False for _ in range(int(c/2))] + [True for _ in range(int(c/2))]
+        work_list = [False for _ in range(c)] + [True for _ in range(c)]
     elif tp == 'standing':
         work_list = [False for _ in range(c)]
     elif tp == 'fall':
         work_list = [True for _ in range(c)]
+    root_path = os.path.join(os.getcwd(), 'virtual_poppy', 'fall_new')
 
     while c:
         env = PoppyEnv(p.POSITION_CONTROL, show=False, use_fixed_base=False, global_scale=gs, gravity=True)
         angles = env.angle_dict(env.get_position())
         angles.update({'l_elbow_y': -90, 'r_elbow_y': -90, 'head_y': 35})
         env.set_position(env.angle_array(angles))
+        path = os.path.join(root_path, str(c))
+        if os.path.exists(path):
+            shutil.rmtree(path)
+
+        os.makedirs(path)
 
         # pos, ori, lin, ang, joint states at timestep 0
         ini_joint_states = env.get_position()
         
         # coordinate of head camera and base
-        hc_z, base_z, trajectory = [], [], []
+        hc_z, base_z = [], []
 
         # In either fall or standing cases, first 50 pictures should not be taken into consideration
-        # standing: False in the work_list
+        # standing: False in the 'work' list
         if not work_list[len(work_list) - c]:
             print('---generating a video where Poppy will stand---{}/{}'.format(len(work_list)-c+1, len(work_list)))
-            root_path = os.path.join(os.getcwd(), 'virtual_poppy', 'standing')
-            path = os.path.join(root_path, str(c))
-            if os.path.exists(path):
-                shutil.rmtree(path)
-            os.makedirs(path)
             for t in range(300):
                 if t > 50:
                     std = std_randomization(env)
                     target = ini_joint_states + np.random.normal(0, std, (36))
-                    # target[-2:] = 0
-                    # target[-11:-9] = 0
-                    # target[4], target[9] = 0, 0
+                    target[-2:] = 0
+                    target[-11:-9] = 0
+                    target[4], target[9] = 0, 0
                     env.step(target)
-                    trajectory.append(target)
                 else:
                     env.step(ini_joint_states)
-                    trajectory.append(ini_joint_states)
                     
                 rgba, _, _ = env.get_camera_image()
                 pt.imsave(os.path.join(path, '{}.png'.format(t)), rgba)
                 
-                # base_pos, _, _, _ = env.get_base()
-                # base_z.append(base_pos)
+                base_pos, _, _, _ = env.get_base()
+                base_z.append(base_pos)
                 hc_pos, _, _, _, _, _, _, _ = p.getLinkState(env.robot_id, env.joint_index['head_cam'], computeLinkVelocity=1)
                 hc_z.append(hc_pos)
 
-            # with open(os.path.join(path, 'base_z.pkl'), 'wb') as pf:
-            #     pickle.dump(base_z, pf)
+            with open(os.path.join(path, 'base_z.pkl'), 'wb') as pf:
+                pickle.dump(base_z, pf)
             with open(os.path.join(path, 'hc_z.pkl'), 'wb') as pf:
                 pickle.dump(hc_z, pf)
-            with open(os.path.join(path, 'trajectory.pkl'), 'wb') as pf:
-                pickle.dump(trajectory, pf)
 
-        # fall: True in the work_list
+        # fall: True in the 'work' list
         else:
             print('---generating a video where Poppy will fall---{}/{}'.format(len(work_list)-c+1, len(work_list)))
-            root_path = os.path.join(os.getcwd(), 'virtual_poppy', 'fall')
-            path = os.path.join(root_path, str(c))
-            if os.path.exists(path):
-                shutil.rmtree(path)
-            os.makedirs(path)
             for t in range(300):
                 if t > 50:
                     std = std_randomization(env, t)
@@ -101,30 +93,26 @@ def start_generation(gs, c, tp):
                         target = ini_joint_states + np.random.normal(0, std, (36))
                     else:
                         target = old_target + np.random.normal(0, std, (36))
-                    # target[-2:] = 0
-                    # target[-11:-9] = 0
-                    # target[4], target[9] = 0, 0
+                    target[-2:] = 0
+                    target[-11:-9] = 0
+                    target[4], target[9] = 0, 0
                     env.step(target)
                     old_target = target
-                    trajectory.append(target)
                 else:
                     env.step(ini_joint_states)
-                    trajectory.append(ini_joint_states)
 
                 rgba, _, _ = env.get_camera_image()
                 pt.imsave(os.path.join(path, '{}.png'.format(t)), rgba)
 
-                # base_pos, _, _, _ = env.get_base()
-                # base_z.append(base_pos)
+                base_pos, _, _, _ = env.get_base()
+                base_z.append(base_pos)
                 hc_pos, _, _, _, _, _, _, _ = p.getLinkState(env.robot_id, env.joint_index['head_cam'], computeLinkVelocity=1)
                 hc_z.append(hc_pos)
 
-            # with open(os.path.join(path, 'base_z.pkl'), 'wb') as pf:
-            #     pickle.dump(base_z, pf)
+            with open(os.path.join(path, 'base_z.pkl'), 'wb') as pf:
+                pickle.dump(base_z, pf)
             with open(os.path.join(path, 'hc_z.pkl'), 'wb') as pf:
                 pickle.dump(hc_z, pf)
-            with open(os.path.join(path, 'trajectory.pkl'), 'wb') as pf:
-                pickle.dump(trajectory, pf)
 
         env.close()
         c -= 1
@@ -132,16 +120,16 @@ def start_generation(gs, c, tp):
     print('generating a new dataset takes {}'.format(datetime.now()-start))
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('gs', default= 10, help= 'global scaling', type= int)
-    # parser.add_argument('n', default= 2, help= 'the number of videos of each case you want every time the script is executed', type= int)
-    # parser.add_argument('type', default= 2, help= '\'fall\' for falls videos, \'standing\' for standing videos, \'both\' for n/2 fall videos and n/2 standing videos', type= str)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('gs', default= 10, help= 'global scaling', type= int)
+    parser.add_argument('n', default= 2, help= 'the number of videos of each case you want every time the script is executed', type= int)
+    parser.add_argument('type', default= 2, help= '\'fall\' for falls videos, \'standing\' for standing videos, \'both\' for n fall videos and n standing videos', type= str)
 
-    # args = parser.parse_args()
-    # gs = args.gs
-    # n = args.n
-    # tp = args.type
-    gs = 10
-    n = 2
-    tp = 'both'
+    args = parser.parse_args()
+    gs = args.gs
+    n = args.n
+    tp = args.type
+    # gs = 10
+    # n = 1
+    # tp = 'fall'
     start_generation(gs, n, tp)
