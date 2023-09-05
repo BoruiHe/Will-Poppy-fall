@@ -55,7 +55,7 @@ def testing_3rd_party_prediction(dataset_name:str):
         HpParams = hyperparameters_virtual
     elif dataset_name == 'real_poppy':
         HpParams = hyperparameters_real
-    checkpoint_name = 'baseline_' + dataset_name + '_pred_ps{}'.format(HpParams['prediction_span'])
+    checkpoint_name = 'baseline_' + dataset_name + '_pred_ps{}_2SF'.format(HpParams['prediction_span'])
     if os.path.exists(os.path.join('checkpoints', checkpoint_name)):
         shutil.rmtree(os.path.join('checkpoints', checkpoint_name))
     os.makedirs(os.path.join('checkpoints', checkpoint_name))
@@ -80,7 +80,7 @@ def testing_3rd_party_prediction(dataset_name:str):
         # dataset
         dataset = m2_mydataset(os.path.join(os.getcwd(), 'checkpoints', checkpoint_name), seed)
         loader = DataLoader(dataset, 1)
-        lsvc = LinearSVC(random_state=seed)
+        lsvc = LinearSVC(random_state=seed, dual=False)
         x, y = [], []
         for frames, label, _ in loader: 
             frames = frames.permute(0,2,1,3,4) # frames: [64, 10, 3, h, w]
@@ -129,4 +129,4 @@ def testing_3rd_party_prediction(dataset_name:str):
     plt.close()
 
 if __name__ == '__main__':
-    testing_3rd_party_prediction('real_poppy')
+    testing_3rd_party_prediction('vir_poppy')

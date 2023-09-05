@@ -1,8 +1,7 @@
 from sklearn.svm import LinearSVC
-from sklearn.metrics import balanced_accuracy_score, f1_score
-from sklearn.model_selection import learning_curve, StratifiedShuffleSplit, cross_validate
-import numpy as np
 from matplotlib import pyplot as plt
+from sklearn.metrics import balanced_accuracy_score, f1_score
+import numpy as np
 import os
 import yaml
 import torch
@@ -42,7 +41,6 @@ def m2_sup(checkpoint_name):
         for vc, label, _ in loader:
             output = toy_model_m1(vc.to(device))[1].squeeze().detach().cpu().numpy().astype(float)
             x.append(output)
-            # x.append(vc.flatten().numpy())
             y.append(label.numpy().astype(int)) 
         lsvc.fit(np.concatenate(x), np.concatenate(y))
         for ps in sup_ps:
@@ -53,7 +51,6 @@ def m2_sup(checkpoint_name):
             for vc, label, _ in loader_sup:
                 output = toy_model_m1(vc.to(device))[1].squeeze().detach().to('cpu').numpy().astype(float)
                 x_sup.append(output)
-                # x.append(vc.flatten().numpy())
                 y_sup.append(label.numpy().astype(int))
             y_pred = lsvc.predict(x_sup)
             summary[seed][ps]['ba'] = balanced_accuracy_score(y_sup, y_pred)
