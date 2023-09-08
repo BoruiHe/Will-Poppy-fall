@@ -1,8 +1,8 @@
 ### Introduction
-This repo is the implementation of the paper [Understanding Hyperdimensional Computing for Parallel Single-Pass Learning](https://arxiv.org/abs/2202.04805).
+This repo is the implementation of the paper [Will Poppy Fall? Predicting Robot Falls in Advance Based on Visual Input](link).
 
 ### Usage
-1. Download the real Poppy dataset from this [link](https://drive.google.com/file/d/1gnMWdRNPNHEHCsTN40nOruPfZXFxTSHg/view?usp=drive_link) and unzip it to this folder.
+1. Download the real Poppy dataset from this [link](https://drive.google.com/file/d/1gnMWdRNPNHEHCsTN40nOruPfZXFxTSHg/view?usp=drive_link) and unzip it to the `Will-Poppy-fall-main` folder.
 2. Generate your virtual Poppy dataset by executing data_generation.py.
 ```
 python data_generation.py [-gs gs] [-n n] [-tp type] 
