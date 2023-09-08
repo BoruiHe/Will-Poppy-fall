@@ -12,10 +12,6 @@ import argparse
 
 
 def std_randomization(env, t=188):
-    # # randomization on the destination
-    # des_x = random.uniform(env.boundary['x'][0], env.boundary['x'][1])
-    # des_y = random.uniform(env.boundary['y'][0], env.boundary['y'][1])
-    # des_z = random.uniform(env.boundary['z'][0], env.boundary['z'][1])
     # standard deviation for nomarl distributions in vibration cases
     threshold = 188
     if t <= threshold:
@@ -24,31 +20,29 @@ def std_randomization(env, t=188):
         factor = (t - threshold) / 3
     std = random.uniform(0.0015, 0.006 * factor) # 17: 186, 18: 194
 
-    # path = os.path.join(root_path, '({0}, {1}, {2}), {3}'.format(des_x, des_y, des_z, std))
-
     return std
 
 def start_generation(gs, c, tp):
     start = datetime.now()
     if tp == 'both':
         work_list = [False for _ in range(c)] + [True for _ in range(c)]
+        c *= 2
     elif tp == 'standing':
         work_list = [False for _ in range(c)]
     elif tp == 'fall':
         work_list = [True for _ in range(c)]
-    root_path = os.path.join(os.getcwd(), 'virtual_poppy', 'fall_new')
+
+    root_path = os.path.join(os.getcwd(), 'virtual_poppy')
+    if os.path.exists(root_path):
+        shutil.rmtree(root_path)
+    os.makedirs(root_path)
 
     while c:
         env = PoppyEnv(p.POSITION_CONTROL, show=False, use_fixed_base=False, global_scale=gs, gravity=True)
         angles = env.angle_dict(env.get_position())
         angles.update({'l_elbow_y': -90, 'r_elbow_y': -90, 'head_y': 35})
         env.set_position(env.angle_array(angles))
-        path = os.path.join(root_path, str(c))
-        if os.path.exists(path):
-            shutil.rmtree(path)
-
-        os.makedirs(path)
-
+        
         # pos, ori, lin, ang, joint states at timestep 0
         ini_joint_states = env.get_position()
         
@@ -59,6 +53,8 @@ def start_generation(gs, c, tp):
         # standing: False in the 'work' list
         if not work_list[len(work_list) - c]:
             print('---generating a video where Poppy will stand---{}/{}'.format(len(work_list)-c+1, len(work_list)))
+            path = os.path.join(os.getcwd(), 'virtual_poppy', 'standing', str(c))
+            os.makedirs(path)
             for t in range(300):
                 if t > 50:
                     std = std_randomization(env)
@@ -86,6 +82,8 @@ def start_generation(gs, c, tp):
         # fall: True in the 'work' list
         else:
             print('---generating a video where Poppy will fall---{}/{}'.format(len(work_list)-c+1, len(work_list)))
+            path = path = os.path.join(os.getcwd(), 'virtual_poppy', 'fall_new', str(c))
+            os.makedirs(path)
             for t in range(300):
                 if t > 50:
                     std = std_randomization(env, t)
