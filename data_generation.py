@@ -121,9 +121,9 @@ def start_generation(gs, c, tp):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('gs', default= 10, help= 'global scaling', type= int)
-    parser.add_argument('n', default= 2, help= 'the number of videos of each case you want every time the script is executed', type= int)
-    parser.add_argument('type', default= 2, help= '\'fall\' for falls videos, \'standing\' for standing videos, \'both\' for n fall videos and n standing videos', type= str)
+    parser.add_argument('-gs', default= 10, help= 'global scaling', type= int)
+    parser.add_argument('-n', default= 2, help= 'the number of videos of each case you want every time the script is executed', type= int)
+    parser.add_argument('-type', default= 'both', help= '\'fall\' for N falls videos, \'standing\' for N standing videos, \'both\' for N fall videos and N standing videos', type= str)
 
     args = parser.parse_args()
     gs = args.gs
