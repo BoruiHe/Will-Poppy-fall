@@ -1,15 +1,9 @@
 import os
 import glob
-import yaml
-import torch
-import random
 import pickle as pk
 import pandas as pd
 import numpy as np
-from PIL import Image
-from torch.utils.data import Dataset
-from torchvision.io import read_video
-from torch.utils.data import DataLoader
+
 
 def preprocessing_vir(f_size=10, start_anchor=50, dilation=8): 
     data_path = os.path.join(os.getcwd(), 'virtual_poppy')
