@@ -16,7 +16,9 @@ Foe example,
 ```
 python data_generation.py -gs 10 -n 1 -type both
 ```
-will 
+will generate 1 falling videos and 1 standing videos. You can find them in the `virtual_poppy` folder.
 3. For testing the 3rd party model, execute baseline.py.
 4. For all experimental results, execute main.py. (You have to set hyperparameters for your personal configuration.)
 5. example_gaga.py will show you an example of image reconstructions.
+### Citation
+If you find this repo useful, please cite:
