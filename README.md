@@ -30,5 +30,5 @@ on Windows OS.
 6. For all experimental results, execute main.py. (You have to set hyperparameters for your personal configuration.)
 7. example_gaga.py will show you an example of image reconstructions.
 
-### Citation
-If you find this repo useful, please cite:
+<!-- ### Citation
+If you find this repo useful, please cite: -->
