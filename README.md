@@ -16,7 +16,7 @@ For example,
 ```
 python data_generation.py -gs 10 -n 1 -type both
 ```
-will generate 1 falling videos and 1 standing videos. You can find them in the `virtual_poppy` folder.
+will generate 1 falling video and 1 standing video. You can find them in the `virtual_poppy` folder.
 
 3. Always run preprocessing.py before any experiment on your virtual Poppy dataset for a new videos.h5 file in the `virtual_poppy` folder.
 
