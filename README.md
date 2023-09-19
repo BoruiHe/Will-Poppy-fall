@@ -3,7 +3,8 @@ This repo is the implementation of the paper [Will Poppy Fall? Predicting Robot 
 
 ### Usage
 1. Download the real Poppy dataset from this [link](https://drive.google.com/file/d/1gnMWdRNPNHEHCsTN40nOruPfZXFxTSHg/view?usp=drive_link) and unzip it to the `Will-Poppy-fall-main` folder.
-2. Generate your virtual Poppy dataset by executing data_generation.py.
+2. The 3rd part dataset can be downloaded from [here](https://doi.org/10.34894/3DV8BF).
+3. Generate your virtual Poppy dataset by executing data_generation.py.
 ```
 python data_generation.py [-gs gs] [-n n] [-tp type] 
 optional arguments:
