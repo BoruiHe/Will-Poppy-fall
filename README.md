@@ -18,7 +18,7 @@ python data_generation.py -gs 10 -n 1 -type both
 ```
 will generate 1 falling video and 1 standing video. You can find them in the `virtual_poppy` folder.
 
-3. Always run preprocessing.py before any experiment on your virtual Poppy dataset for a new videos.h5 file in the `virtual_poppy` folder.
+4. Always run preprocessing.py before any experiment on your virtual Poppy dataset for a new videos.h5 file in the `virtual_poppy` folder.
 
 For example, run
 ```
@@ -26,10 +26,10 @@ python utils/preprocessing.py
 ```
 on Windows OS.
 
-4. You may need to create the `checkpoints` folder before any experiment.
-5. For testing the 3rd party model, execute baseline.py.
-6. For all experimental results, execute main.py. (You have to set hyperparameters for your personal configuration.)
-7. example_gaga.py will show you an example of image reconstructions.
+5. You may need to create the `checkpoints` folder before any experiment.
+6. For testing the 3rd party model, execute baseline.py.
+7. For all experimental results, execute main.py. (You have to set hyperparameters for your personal configuration.)
+8. example_gaga.py will show you an example of image reconstructions.
 
 <!-- ### Citation
 If you find this repo useful, please cite: -->
